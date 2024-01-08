@@ -1,0 +1,16 @@
+{
+  "project_info": {
+    "project_number": "<YOUR_PROJECT_NUMBER>",
+    "project_id": "<YOUR_PROJECT_ID>"
+  },
+  "client_info": {
+    "mobilesdk_app_id": "<YOUR_MOBILE_SDK_APP_ID>",
+    "ios_client_info": {
+      "bundle_identifier": "<YOUR_MOBILE_BUNDLE_IDENTIFIER>"
+    }
+  },
+  "host_info": {
+    "host_info": "<YOUR_HOST_INFO>",
+    "host_key": "<YOUR_HOST_KEY>"
+  }
+}
