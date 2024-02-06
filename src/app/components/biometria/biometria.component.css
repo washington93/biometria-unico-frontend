@@ -1,3 +1,40 @@
 :host {
   display: block;
 }
+
+.container {
+  width: 100%;
+  margin: 0 auto;
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.center {
+  text-align: center;
+}
+
+.pd20 {
+  padding: 20px;
+}
+
+.bd-r50 {
+  border-radius: 5px;
+}
+
+.shadow {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 7px 25px 0 rgba(0, 0, 0, 0.03),
+    0 4px 12px 0 rgba(0, 0, 0, 0.03);
+}
+
+.mg20-b {
+  margin-bottom: 20px;
+}
+
+.mg20-t {
+  margin-top: 20px;
+}
+
+.bg {
+  color: #333333;
+  background-color: #fff;
+}

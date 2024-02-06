@@ -1,0 +1,23 @@
+<div class="container pd20">
+  <div class="center">
+    <input
+      type="text"
+      class="input"
+      placeholder="CPF"
+      [(ngModel)]="cpf"
+      (click)="alertMessage = ''"
+    />
+    <p style="color: red; margin-bottom: 20px">{{alertMessage}}</p>
+    <button class="btn" (click)="openCam()">Abrir Câmera</button>
+  </div>
+
+  <!-- exibir um json -->
+  <div class="pd20 bd-r5 shadow mg20-b mg20-t bg center" *ngIf="payload">
+    <pre style="text-align: left">
+        <code>
+{{ payload }}
+        </code>
+    </pre>
+    <button (click)="copyPayload()">Copiar</button>
+  </div>
+</div>

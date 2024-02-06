@@ -10,27 +10,42 @@ import {
   SuccessPictureResponse,
   SupportPictureResponse,
 } from 'unico-webframe';
+import { BiometriaService } from './biometria.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-biometria',
   standalone: true,
-  imports: [CommonModule],
-  template: `
-    <button class="btn" (click)="openCam()">Abrir Câmera</button>
-  `,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './biometria.component.html',
   styleUrl: './biometria.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BiometriaComponent {
+  cpf: string = '';
   unicoCamera!: MainView;
+  payload: any;
 
-  constructor() {
+  constructor(private biometriaService: BiometriaService) {
     this.configUnicoWebframe();
+    // this.payload = JSON.stringify(
+    //   {
+    //     nome: 'Exemplo',
+    //     idade: 30,
+    //     cidade: 'Cidade Exemplo',
+    //   },
+    //   null,
+    //   2
+    // );
   }
 
-  async openCam() {
-    const identification = '41979561850';
+  alertMessage = '';
 
+  async openCam() {
+    if (!this.cpf) {
+      this.alertMessage = 'Informe o CPF';
+      return;
+    }
     try {
       let cameraPromised: CameraOpener =
         await this.unicoCamera.prepareSelfieCamera(
@@ -46,16 +61,26 @@ export class BiometriaComponent {
 
             const data: any = {
               subject: {
-                Code: userRegisterData?.cpf_cnpj,
-                Name: userRegisterData?.name,
+                Code: this.cpf,
+                Name: 'Washington da Silva Ribeiro',
                 // Gender: 'M',
-                BirthDate: userRegisterData?.birth_date,
-                Email: userRegisterData?.email,
-                Phone: userRegisterData?.cel,
+                BirthDate: '1993-08-30',
+                Email: 'washington.ribeiro@paneas.com',
+                Phone: '84992140775',
               },
               onlySelfie: true,
               imagebase64: obj?.encrypted,
             };
+            console.log('data -> ', data);
+            this.payload = JSON.stringify(data, null, 2);
+            this.biometriaService.processarBiometria(data).subscribe({
+              next: (data) => {
+                console.log('data -> ', data);
+              },
+              error: (error) => {
+                console.log('error -> ', error);
+              },
+            });
           },
           error: (error: ErrorPictureResponse) => {
             console.log('ErrorPictureResponse -> ', error);
@@ -68,7 +93,7 @@ export class BiometriaComponent {
 
       cameraPromised.open(callback);
     } catch (error: any) {
-      console.log("openCam -> ", error);
+      console.log('openCam -> ', error);
       return;
     }
   }
@@ -100,5 +125,43 @@ export class BiometriaComponent {
     unicoCameraBuilder.setModelsPath('https://localhost:4203/assets');
 
     this.unicoCamera = unicoCameraBuilder.build();
+  }
+
+  copyPayload() {
+    navigator.clipboard
+      .writeText(this.payload)
+      .then(() => {
+        console.log('Conteúdo copiado para a área de transferência!');
+      })
+      .catch((err) => {
+        console.error('Falha ao copiar o conteúdo: ', err);
+      });
+  }
+
+  copyCUrl() {
+    const curl = this.criarCurl(this.payload);
+    navigator.clipboard
+      .writeText(curl)
+      .then(() => {
+        console.log('Conteúdo copiado para a área de transferência!');
+      })
+      .catch((err) => {
+        console.error('Falha ao copiar o conteúdo: ', err);
+      });
+  }
+
+  criarCurl(payload: any, baseUrl: string = 'http://127.0.0.1:8000') {
+    return `
+      curl '${baseUrl}/api/v1/biometria' \
+      -H 'sec-ch-ua: "Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"' \
+      -H 'Accept: application/json, text/plain, */*' \
+      -H 'Content-Type: application/json' \
+      -H 'Referer: http://localhost:4200/' \
+      -H 'sec-ch-ua-mobile: ?0' \
+      -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36' \
+      -H 'sec-ch-ua-platform: "macOS"' \
+      --data-raw '${payload}' \
+      --compressed
+    `;
   }
 }
