@@ -38,3 +38,22 @@
   color: #333333;
   background-color: #fff;
 }
+
+.input{
+  margin-bottom: 10px;
+  padding: 20px 10px;
+  height: 20px;
+  border-radius: 5px;
+}
+
+input[type="date" i] {
+  padding-block: 1px;
+  padding-inline: 2px;
+  width: 164px;
+}
+
+input[type="text" i] {
+  padding-block: 1px;
+  padding-inline: 2px;
+  width: 164px;
+}

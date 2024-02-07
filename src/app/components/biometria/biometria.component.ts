@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {
   UnicoCheckBuilder,
   SelfieCameraTypes,
@@ -21,10 +21,28 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './biometria.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BiometriaComponent {
-  cpf: string = '';
+export class BiometriaComponent implements OnInit {
+  Code?: string = '';
+  Name?: string = '';
+  BirthDate?: Date;
+  Email?: string = '';
+  Phone?: string = '';
   unicoCamera!: MainView;
   payload: any;
+  saveData: boolean = false;
+
+  ngOnInit() {
+    let localstorageData = localStorage.getItem('data');
+    let data = localstorageData ? JSON.parse(localstorageData) : null;
+    if (data) {
+      this.Code = data.Code;
+      this.Name = data.Name;
+      this.BirthDate = data.BirthDate;
+      this.Email = data.Email;
+      this.Phone = data.Phone;
+      this.saveData = true;
+    }
+  }
 
   constructor(private biometriaService: BiometriaService) {
     this.configUnicoWebframe();
@@ -39,13 +57,47 @@ export class BiometriaComponent {
     // );
   }
 
-  alertMessage = '';
+  alertMessages = {
+    Code: '',
+    Name: '',
+    BirthDate: '',
+    Email: '',
+    Phone: '',
+  };
 
   async openCam() {
-    if (!this.cpf) {
-      this.alertMessage = 'Informe o CPF';
+    if (this.saveData) {
+      localStorage.setItem(
+        'data',
+        JSON.stringify({
+          Code: this.Code,
+          Name: this.Name,
+          BirthDate: this.BirthDate,
+          Email: this.Email,
+          Phone: this.Phone,
+        })
+      );
+    } else {
+      localStorage.removeItem('data');
+    }
+
+    if (!this.Code) this.alertMessages.Code = 'Informe o CPF';
+    if (!this.Name) this.alertMessages.Name = 'Informe o Nome';
+    if (!this.BirthDate)
+      this.alertMessages.BirthDate = 'Informe a Data de Nascimento';
+    if (!this.Email) this.alertMessages.Email = 'Informe o Email';
+    if (!this.Phone) this.alertMessages.Phone = 'Informe o Telefone';
+
+    if (
+      !this.Code ||
+      !this.Name ||
+      !this.BirthDate ||
+      !this.Email ||
+      !this.Phone
+    ) {
       return;
     }
+
     try {
       let cameraPromised: CameraOpener =
         await this.unicoCamera.prepareSelfieCamera(
@@ -56,17 +108,14 @@ export class BiometriaComponent {
       const callback = {
         on: {
           success: async (obj: SuccessPictureResponse) => {
-            const filename = 'data.json';
-            let userRegisterData: any = {};
-
             const data: any = {
               subject: {
-                Code: this.cpf,
-                Name: 'Washington da Silva Ribeiro',
+                Code: this.Code,
+                Name: this.Name,
                 // Gender: 'M',
-                BirthDate: '1993-08-30',
-                Email: 'washington.ribeiro@paneas.com',
-                Phone: '84992140775',
+                BirthDate: this.BirthDate,
+                Email: this.Email,
+                Phone: this.Phone,
               },
               onlySelfie: true,
               imagebase64: obj?.encrypted,
@@ -163,5 +212,15 @@ export class BiometriaComponent {
       --data-raw '${payload}' \
       --compressed
     `;
+  }
+
+  clearMessages() {
+    this.alertMessages = {
+      Code: '',
+      Name: '',
+      BirthDate: '',
+      Email: '',
+      Phone: '',
+    };
   }
 }

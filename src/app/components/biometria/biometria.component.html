@@ -4,10 +4,52 @@
       type="text"
       class="input"
       placeholder="CPF"
-      [(ngModel)]="cpf"
-      (click)="alertMessage = ''"
+      [(ngModel)]="Code"
+      (click)="clearMessages()"
     />
-    <p style="color: red; margin-bottom: 20px">{{alertMessage}}</p>
+    <br />
+    <input
+      type="text"
+      class="input"
+      placeholder="Nome"
+      [(ngModel)]="Name"
+      (click)="clearMessages()"
+    />
+    <br />
+    <input
+      type="date"
+      class="input"
+      [(ngModel)]="BirthDate"
+      (click)="clearMessages()"
+    />
+    <br />
+    <input
+      type="text"
+      class="input"
+      placeholder="Email"
+      [(ngModel)]="Email"
+      (click)="clearMessages()"
+    />
+    <br />
+    <input
+      type="text"
+      class="input"
+      placeholder="Telefone"
+      [(ngModel)]="Phone"
+      (click)="clearMessages()"
+    />
+    <br />
+    <p style="color: red; margin-bottom: 10px">{{ alertMessages.Code }}</p>
+    <p style="color: red; margin-bottom: 10px">{{ alertMessages.Name }}</p>
+    <p style="color: red; margin-bottom: 10px">{{ alertMessages.BirthDate }}</p>
+    <p style="color: red; margin-bottom: 10px">{{ alertMessages.Email }}</p>
+    <p style="color: red; margin-bottom: 20px">{{ alertMessages.Phone }}</p>
+    <!-- checkbox -->
+    <input type="checkbox" id="checkbox" [(ngModel)]="saveData" />
+    <label for="checkbox">Salvar dados</label>
+    <br />
+    <br />
+
     <button class="btn" (click)="openCam()">Abrir Câmera</button>
   </div>
 
