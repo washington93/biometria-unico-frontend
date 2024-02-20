@@ -1,65 +1,79 @@
-<div class="container pd20">
-  <div class="center">
-    <input
-      type="text"
-      class="input"
-      placeholder="CPF"
-      [(ngModel)]="Code"
-      (click)="clearMessages()"
-    />
+<div class="container">
+  <ng-container *ngIf="!logado; else usuarioLogado">
+    <div class="center" style="position: relative;">
+      <input
+        type="text"
+        class="input"
+        placeholder="Usuário"
+        [(ngModel)]="usuario"
+        (click)="clearMessages()"
+      />
+      <br />
+      <input
+        type="password"
+        class="input"
+        placeholder="Senha"
+        [(ngModel)]="senha"
+        (click)="clearMessages()"
+      />
+      <br />
+      <input type="checkbox" id="cb-lembrar" [(ngModel)]="lembrar" />
+      <label for="cb-lembrar">Lembrar</label>
+      <br />
+      <button style="margin-top: 20px" (click)="login()">Acessar</button>
+      <p class="error" style="margin-top: 10px" *ngIf="mensagemErro">
+        {{ mensagemErro }}
+      </p>
+    </div>
+    <div class="v-line"></div>
+    <div class="h-line"></div>
+  </ng-container>
+  <ng-template #usuarioLogado>
     <br />
-    <input
-      type="text"
-      class="input"
-      placeholder="Nome"
-      [(ngModel)]="Name"
-      (click)="clearMessages()"
-    />
-    <br />
-    <input
-      type="date"
-      class="input"
-      [(ngModel)]="BirthDate"
-      (click)="clearMessages()"
-    />
-    <br />
-    <input
-      type="text"
-      class="input"
-      placeholder="Email"
-      [(ngModel)]="Email"
-      (click)="clearMessages()"
-    />
-    <br />
-    <input
-      type="text"
-      class="input"
-      placeholder="Telefone"
-      [(ngModel)]="Phone"
-      (click)="clearMessages()"
-    />
-    <br />
-    <p style="color: red; margin-bottom: 10px">{{ alertMessages.Code }}</p>
-    <p style="color: red; margin-bottom: 10px">{{ alertMessages.Name }}</p>
-    <p style="color: red; margin-bottom: 10px">{{ alertMessages.BirthDate }}</p>
-    <p style="color: red; margin-bottom: 10px">{{ alertMessages.Email }}</p>
-    <p style="color: red; margin-bottom: 20px">{{ alertMessages.Phone }}</p>
-    <!-- checkbox -->
-    <input type="checkbox" id="checkbox" [(ngModel)]="saveData" />
-    <label for="checkbox">Salvar dados</label>
-    <br />
-    <br />
-
-    <button class="btn" (click)="openCam()">Abrir Câmera</button>
-  </div>
-
-  <!-- exibir um json -->
-  <div class="pd20 bd-r5 shadow mg20-b mg20-t bg center" *ngIf="payload">
-    <pre style="text-align: left">
+    <div class="a" *ngIf="resultadoBiometria">
+      <div class="pd20 bd-r5 shadow mg20-b mg20-t bg center" *ngIf="payload">
+        <pre style="text-align: left">
         <code>
-{{ payload }}
+{{ resultadoBiometria }}
         </code>
     </pre>
-    <button (click)="copyPayload()">Copiar</button>
-  </div>
+        <button (click)="copyPayload()">Copiar</button>
+        <br />
+      </div>
+    </div>
+
+    <button class="btn" (click)="openCam()">Abrir Câmera</button>
+
+    <br />
+    <br />
+    HISTÓRICO DE BIOMETRIA <br />
+    <table>
+      <tr>
+        <th>id</th>
+        <th>face_match</th>
+        <th>has_biometry</th>
+        <th>liveness</th>
+        <th>score</th>
+        <th></th>
+      </tr>
+      <tr *ngFor="let item of biometriasAnteriores">
+        <td>{{ item.id_biometria }}</td>
+        <td>{{ item.face_match }}</td>
+        <td>{{ item.has_biometry }}</td>
+        <td>{{ item.liveness }}</td>
+        <td>{{ item.score }}</td>
+        <td>
+          <button (click)="buscarBiometria(item.id_biometria)">
+            Atualizar
+          </button>
+        </td>
+      </tr>
+    </table>
+  </ng-template>
 </div>
+
+<div class="spinner-container" *ngIf="processando">
+  <div class="spinner"></div>
+</div>
+
+<p class="sair" (click)="sair()">Sair</p>

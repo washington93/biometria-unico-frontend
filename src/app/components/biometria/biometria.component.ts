@@ -19,85 +19,55 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule],
   templateUrl: './biometria.component.html',
   styleUrl: './biometria.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class BiometriaComponent implements OnInit {
-  Code?: string = '';
-  Name?: string = '';
-  BirthDate?: Date;
-  Email?: string = '';
-  Phone?: string = '';
   unicoCamera!: MainView;
-  payload: any;
   saveData: boolean = false;
+  payload: any;
+
+  logado: boolean = false;
+  resultadoBiometria: any;
+
+  processando: boolean = false;
 
   ngOnInit() {
-    let localstorageData = localStorage.getItem('data');
-    let data = localstorageData ? JSON.parse(localstorageData) : null;
-    if (data) {
-      this.Code = data.Code;
-      this.Name = data.Name;
-      this.BirthDate = data.BirthDate;
-      this.Email = data.Email;
-      this.Phone = data.Phone;
-      this.saveData = true;
+    let accessToken = sessionStorage.getItem('access_token');
+    this.logado = !!accessToken;
+
+    let usuario = localStorage.getItem('usuario');
+    if (usuario) {
+      this.usuario = usuario;
+      this.lembrar = true;
     }
+
+    if (this.logado) {
+      this.init();
+    }
+  }
+
+  biometriasAnteriores: any = [];
+
+  init() {
+    this.processando = true;
+    this.biometriaService.buscarBiometrias().subscribe({
+      next: (data) => {
+        console.log('data -> ', data);
+        this.biometriasAnteriores = data;
+        this.processando = false;
+      },
+      error: (error) => {
+        console.log('error -> ', error);
+        this.processando = false;
+      },
+    });
   }
 
   constructor(private biometriaService: BiometriaService) {
     this.configUnicoWebframe();
-    // this.payload = JSON.stringify(
-    //   {
-    //     nome: 'Exemplo',
-    //     idade: 30,
-    //     cidade: 'Cidade Exemplo',
-    //   },
-    //   null,
-    //   2
-    // );
   }
 
-  alertMessages = {
-    Code: '',
-    Name: '',
-    BirthDate: '',
-    Email: '',
-    Phone: '',
-  };
-
   async openCam() {
-    if (this.saveData) {
-      localStorage.setItem(
-        'data',
-        JSON.stringify({
-          Code: this.Code,
-          Name: this.Name,
-          BirthDate: this.BirthDate,
-          Email: this.Email,
-          Phone: this.Phone,
-        })
-      );
-    } else {
-      localStorage.removeItem('data');
-    }
-
-    if (!this.Code) this.alertMessages.Code = 'Informe o CPF';
-    if (!this.Name) this.alertMessages.Name = 'Informe o Nome';
-    if (!this.BirthDate)
-      this.alertMessages.BirthDate = 'Informe a Data de Nascimento';
-    if (!this.Email) this.alertMessages.Email = 'Informe o Email';
-    if (!this.Phone) this.alertMessages.Phone = 'Informe o Telefone';
-
-    if (
-      !this.Code ||
-      !this.Name ||
-      !this.BirthDate ||
-      !this.Email ||
-      !this.Phone
-    ) {
-      return;
-    }
-
     try {
       let cameraPromised: CameraOpener =
         await this.unicoCamera.prepareSelfieCamera(
@@ -109,33 +79,31 @@ export class BiometriaComponent implements OnInit {
         on: {
           success: async (obj: SuccessPictureResponse) => {
             const data: any = {
-              subject: {
-                Code: this.Code,
-                Name: this.Name,
-                // Gender: 'M',
-                BirthDate: this.BirthDate,
-                Email: this.Email,
-                Phone: this.Phone,
-              },
               onlySelfie: true,
               imagebase64: obj?.encrypted,
             };
-            console.log('data -> ', data);
-            this.payload = JSON.stringify(data, null, 2);
+            this.processando = true;
             this.biometriaService.processarBiometria(data).subscribe({
               next: (data) => {
                 console.log('data -> ', data);
+                this.resultadoBiometria = data;
+                this.init();
               },
               error: (error) => {
                 console.log('error -> ', error);
+                this.resultadoBiometria = error;
+                alert(error?.error?.detail);
+                this.processando = false;
               },
             });
           },
           error: (error: ErrorPictureResponse) => {
             console.log('ErrorPictureResponse -> ', error);
+            this.processando = false;
           },
           support: (error: SupportPictureResponse) => {
             console.log('SupportPictureResponse -> ', error);
+            this.processando = false;
           },
         },
       };
@@ -215,12 +183,62 @@ export class BiometriaComponent implements OnInit {
   }
 
   clearMessages() {
-    this.alertMessages = {
-      Code: '',
-      Name: '',
-      BirthDate: '',
-      Email: '',
-      Phone: '',
-    };
+    this.mensagemErro = '';
+  }
+
+  usuario: string = '';
+  senha: string = '';
+  mensagemErro: string = '';
+  lembrar: boolean = false;
+
+  login() {
+    if (!this.usuario) {
+      this.mensagemErro = 'Informe o usuário';
+      return;
+    }
+    if (!this.senha) {
+      this.mensagemErro = 'Informe a senha';
+      return;
+    }
+
+    if (this.lembrar) {
+      localStorage.setItem('usuario', this.usuario);
+    }
+
+    this.processando = true;
+    this.biometriaService.login(this.usuario, this.senha).subscribe({
+      next: (data) => {
+        console.log('data -> ', data);
+        let { access_token, token_type } = data;
+        sessionStorage.setItem('access_token', `${access_token}`);
+        this.logado = true;
+        this.processando = false;
+        window.location.reload();
+      },
+      error: (error) => {
+        console.log('error -> ', error);
+        this.mensagemErro = 'Usuário ou senha inválidos';
+        this.processando = false;
+      },
+    });
+  }
+
+  buscarBiometria(id_biometria: string) {
+    this.processando = true;
+    this.biometriaService.buscarBiometria(id_biometria).subscribe({
+      next: (data) => {
+        this.init();
+      },
+      error: (error) => {
+        console.log('error -> ', error);
+        this.processando = false;
+      },
+    });
+  }
+
+  sair() {
+    sessionStorage.removeItem('access_token');
+    this.logado = false;
+    window.location.reload();
   }
 }

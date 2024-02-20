@@ -1,3 +1,14 @@
+.container {
+  min-height: 100vh;
+  min-width: 100vw;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 :host {
   display: block;
 }
@@ -39,21 +50,101 @@
   background-color: #fff;
 }
 
-.input{
+.input {
   margin-bottom: 10px;
   padding: 20px 10px;
   height: 20px;
   border-radius: 5px;
 }
 
+input[type="text" i],
+input[type="password" i],
 input[type="date" i] {
   padding-block: 1px;
   padding-inline: 2px;
   width: 164px;
 }
 
-input[type="text" i] {
-  padding-block: 1px;
-  padding-inline: 2px;
-  width: 164px;
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+  position: absolute;
+  width: 100%;
+}
+
+.v-line {
+  min-width: 1px;
+  min-height: 100vh;
+  background-color: #333333;
+  position: absolute;
+  opacity: 0.15;
+}
+
+.h-line {
+  min-width: 100vw;
+  min-height: 1px;
+  background-color: #333333;
+  position: absolute;
+  opacity: 0.15;
+}
+
+table {
+  border-collapse: collapse;
+  max-width: 100%;
+  margin-top: 20px;
+}
+
+th,
+td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #ddd;
+}
+
+.spinner-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.65);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #fcfcfc;
+  border-top: 4px solid #e1173f;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.sair {
+  position: absolute;
+  top: 0px;
+  right: 20px;
+  cursor: pointer;
+  text-decoration: underline;
 }
