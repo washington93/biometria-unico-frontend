@@ -1,0 +1,32 @@
+table {
+  border-collapse: collapse;
+  max-width: 100%;
+  margin-top: 20px;
+}
+
+th,
+td {
+  border: 1px solid var(--cinza-medio);
+  text-align: left;
+  padding: 8px;
+}
+
+tr {
+  cursor: pointer;
+}
+
+tr:nth-child(even) {
+  background-color: var(--cinza-claro);
+}
+
+tr:hover {
+  background-color: var(--cinza-medio);
+}
+
+th {
+  background-color: var(--cinza-escuro);
+  color: var(--bg);
+  border: 0;
+  text-transform: uppercase;
+  cursor: default;
+}

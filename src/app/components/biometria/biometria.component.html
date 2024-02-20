@@ -1,9 +1,11 @@
 <div class="container">
   <ng-container *ngIf="!logado; else usuarioLogado">
-    <div class="center" style="position: relative;">
+    <div class="login-container center" style="position: relative">
+      <!-- <div class="logo"></div> -->
       <input
         type="text"
-        class="input"
+        class="input cor"
+        style="margin: 0;"
         placeholder="Usuário"
         [(ngModel)]="usuario"
         (click)="clearMessages()"
@@ -12,21 +14,24 @@
       <input
         type="password"
         class="input"
+        style="margin: 0;"
         placeholder="Senha"
         [(ngModel)]="senha"
         (click)="clearMessages()"
       />
       <br />
-      <input type="checkbox" id="cb-lembrar" [(ngModel)]="lembrar" />
-      <label for="cb-lembrar">Lembrar</label>
+      <div class="lembrar">
+        <input type="checkbox" id="cb-lembrar" [(ngModel)]="lembrar" />
+        <label for="cb-lembrar">Lembrar</label>
+      </div>
       <br />
-      <button style="margin-top: 20px" (click)="login()">Acessar</button>
+      <button (click)="login()">Acessar</button>
       <p class="error" style="margin-top: 10px" *ngIf="mensagemErro">
         {{ mensagemErro }}
       </p>
     </div>
-    <div class="v-line"></div>
-    <div class="h-line"></div>
+    <!-- <div class="v-line"></div>
+    <div class="h-line"></div> -->
   </ng-container>
   <ng-template #usuarioLogado>
     <br />
@@ -63,7 +68,7 @@
         <td>{{ item.liveness }}</td>
         <td>{{ item.score }}</td>
         <td>
-          <button (click)="buscarBiometria(item.id_biometria)">
+          <button (click)="buscarBiometria(item.id_biometria)" class="sm secondary">
             Atualizar
           </button>
         </td>

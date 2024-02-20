@@ -9,6 +9,20 @@
   align-items: center;
 }
 
+.login-container{
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  padding: 20px;
+  padding-bottom: 36px;
+  padding-top: 48px;
+}
+
 :host {
   display: block;
 }
@@ -32,11 +46,6 @@
   border-radius: 5px;
 }
 
-.shadow {
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 7px 25px 0 rgba(0, 0, 0, 0.03),
-    0 4px 12px 0 rgba(0, 0, 0, 0.03);
-}
-
 .mg20-b {
   margin-bottom: 20px;
 }
@@ -57,18 +66,11 @@
   border-radius: 5px;
 }
 
-input[type="text" i],
-input[type="password" i],
-input[type="date" i] {
-  padding-block: 1px;
-  padding-inline: 2px;
-  width: 164px;
-}
-
 .error {
   color: red;
   font-size: 12px;
   margin-top: 5px;
+  bottom: 5px;
   position: absolute;
   width: 100%;
 }
@@ -87,27 +89,6 @@ input[type="date" i] {
   background-color: #333333;
   position: absolute;
   opacity: 0.15;
-}
-
-table {
-  border-collapse: collapse;
-  max-width: 100%;
-  margin-top: 20px;
-}
-
-th,
-td {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
-
-tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-tr:hover {
-  background-color: #ddd;
 }
 
 .spinner-container {
@@ -147,4 +128,24 @@ tr:hover {
   right: 20px;
   cursor: pointer;
   text-decoration: underline;
+}
+
+.logo{
+  min-width: 250px;
+  height: 100px;
+  margin-bottom: 10px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.lembrar{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.lembrar label{
+  margin-left: 5px;
 }

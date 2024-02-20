@@ -1,1 +1,22 @@
+@import "./scss/@theme.scss";
+@import "./scss/colors.scss";
+@import "./scss/forms.scss";
+@import "./scss/tables.scss";
+
 /* You can add global styles to this file, and also import other style files */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+}
+
+//DeveExtreme
+// @import "./scss/customDxExtreme.scss";
+html, body {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased; /* Chrome, Safari */
+    -moz-osx-font-smoothing: grayscale; /* Firefox */
+  }
+  

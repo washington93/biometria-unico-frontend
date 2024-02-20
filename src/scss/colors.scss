@@ -1,0 +1,46 @@
+//
+$bg: #fcfcfc;
+$cor: #e1173f;
+$cor-hover: darken($cor, 10%);
+$cor-acento: lighten($cor, 10%);
+// Textos
+$texto: #333333;
+$texto-claro: #555555;
+// Feedback
+$erro: #d32f2f;
+$sucesso: #388e3c;
+$info: #1976d2;
+$aviso: #ffa000;
+// Sombra
+$shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075), 0 0 5px rgba(255, 23, 63, 0.5);
+// Divisão
+$cinza-claro: #f0f0f0;
+$cinza-medio: #dcdcdc;
+$cinza-escuro: #a9a9a9;
+
+:root {
+  --bg: #{$bg};
+  --cor: #{$cor};
+  --cor-hover: #{$cor-hover};
+  --cor-acento: #{$cor-acento};
+  --texto: #{$texto};
+  --texto-claro: #{$texto-claro};
+  --erro: #{$erro};
+  --sucesso: #{$sucesso};
+  --info: #{$info};
+  --aviso: #{$aviso};
+  --shadow: #{$shadow};
+  --cinza-claro: #{$cinza-claro};
+  --cinza-medio: #{$cinza-medio};
+  --cinza-escuro: #{$cinza-escuro};
+}
+
+.cor {
+  color: var(--bg);
+  background-color: var(--cor);
+  border: 1px solid var(--cor);
+  &:hover {
+    background-color: var(--bg);
+    color: var(--cor);
+  }
+}
